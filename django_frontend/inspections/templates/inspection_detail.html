@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a
+    href="{% url 'dashboard' %}"
+    class="btn btn-outline-secondary mb-3"
+>
+    ← Back
+</a>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+
+            <div>
+
+                <h3>
+                    {{ inspection.product_name|default:"Unnamed Product" }}
+                </h3>
+
+                <p>
+                    Inspection ID:
+                    #{{ inspection.id }}
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+
+                    {% if inspection.status == 'PASS' %}
+
+                    <span class="badge bg-success">
+                        ✓ PASS
+                    </span>
+
+                    {% elif inspection.status == 'FAIL' %}
+
+                    <span class="badge bg-danger">
+                        ⚠ FAIL
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge bg-warning text-dark">
+                        {{ inspection.status }}
+                    </span>
+
+                    {% endif %}
+
+                </h4>
+
+            </div>
+
+        </div>
+
+
+        <hr>
+
+
+        <h4>Product Images</h4>
+
+        <div class="row">
+
+            {% if inspection.front_image %}
+
+            <div class="col-md-4">
+
+                <h6>Front</h6>
+
+                <img
+                    src="{{ inspection.front_image.url }}"
+                    class="img-fluid rounded"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+            {% if inspection.back_image %}
+
+            <div class="col-md-4">
+
+                <h6>Back</h6>
+
+                <img
+                    src="{{ inspection.back_image.url }}"
+                    class="img-fluid rounded"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+            {% if inspection.side_image %}
+
+            <div class="col-md-4">
+
+                <h6>Side</h6>
+
+                <img
+                    src="{{ inspection.side_image.url }}"
+                    class="img-fluid rounded"
+                >
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <hr>
+
+
+        <h4>Extracted Information</h4>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p>
+                    <strong>MRP:</strong>
+                    {{ inspection.extracted_mrp|default:"Not processed" }}
+                </p>
+
+                <p>
+                    <strong>Net Quantity:</strong>
+                    {{ inspection.extracted_net_quantity|default:"Not processed" }}
+                </p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <p>
+                    <strong>Manufacturer:</strong>
+                    {{ inspection.extracted_manufacturer|default:"Not processed" }}
+                </p>
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ inspection.extracted_date|default:"Not processed" }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <hr>
+
+
+        <h4>Compliance Violations</h4>
+
+        {% if inspection.violations %}
+
+            {% for violation in inspection.violations %}
+
+            <div class="alert alert-danger">
+
+                ⚠ {{ violation }}
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-secondary">
+
+                OCR and rule validation have not been run yet.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
